@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاسبه حجم برای ورود به معامله</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
+            margin: 20px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: auto;
+        }
+
+        label,
+        input {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -8px;
+            margin-bottom: 8px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>محاسبه حجم برای ورود به معامله</h1>
+    <form id="calcForm" onsubmit="calculateX(event)">
+        <label for="capital">کل سرمایه:</label>
+        <input type="number" id="capital" required>
+        <span class="error" id="capitalError"></span>
+
+        <label for="risk_percent">میزان ریسک (به درصد):</label>
+        <input type="number" id="risk_percent" required>
+        <span class="error" id="riskPercentError"></span>
+
+        <label for="stop_loss_percent">حد ضرر (به درصد):</label>
+        <input type="number" id="stop_loss_percent" required>
+        <span class="error" id="stopLossPercentError"></span>
+
+        <label for="leverage">لوریج:</label>
+        <input type="number" id="leverage" required>
+        <span class="error" id="leverageError"></span>
+
+        <input type="submit" value="محاسبه">
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function calculateX(event) {
+            event.preventDefault(); // جلوگیری از ارسال فرم به روش سنتی
+
+            // پاک کردن خطاهای قبلی
+            document.getElementById('capitalError').textContent = '';
+            document.getElementById('riskPercentError').textContent = '';
+            document.getElementById('stopLossPercentError').textContent = '';
+            document.getElementById('leverageError').textContent = '';
+
+            // گرفتن مقادیر ورودی‌ها
+            let capital = parseFloat(document.getElementById('capital').value);
+            let riskPercent = parseFloat(document.getElementById('risk_percent').value);
+            let stopLossPercent = parseFloat(document.getElementById('stop_loss_percent').value);
+            let leverage = parseFloat(document.getElementById('leverage').value);
+
+            let valid = true;
+
+            // بررسی ورودی‌ها
+            if (isNaN(capital) || capital <= 0) {
+                document.getElementById('capitalError').textContent = 'لطفاً مقدار سرمایه معتبر وارد کنید.';
+                valid = false;
+            }
+
+            if (isNaN(riskPercent) || riskPercent <= 0 || riskPercent > 100) {
+                document.getElementById('riskPercentError').textContent = 'لطفاً میزان ریسک معتبر (بین ۱ تا ۱۰۰) وارد کنید.';
+                valid = false;
+            }
+
+            if (isNaN(stopLossPercent) || stopLossPercent <= 0 || stopLossPercent > 100) {
+                document.getElementById('stopLossPercentError').textContent = 'لطفاً حد ضرر معتبر (بین ۱ تا ۱۰۰) وارد کنید.';
+                valid = false;
+            }
+
+            if (isNaN(leverage) || leverage <= 0) {
+                document.getElementById('leverageError').textContent = 'لطفاً لوریج معتبر وارد کنید.';
+                valid = false;
+            }
+
+            // اگر ورودی‌ها معتبر بودند، محاسبه و نمایش نتیجه
+            if (valid) {
+                riskPercent /= 100;
+                stopLossPercent /= 100;
+                let x = (capital * riskPercent) / (leverage * stopLossPercent);
+                document.getElementById('result').textContent = `خروجی X: ${x.toFixed(4)}`;
+            } else {
+                document.getElementById('result').textContent = '';
+            }
+        }
+    </script>
+</body>
+
+</html>

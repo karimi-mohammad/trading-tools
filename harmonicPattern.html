@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmonic Pattern Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input {
+            margin: 10px 0;
+            padding: 8px;
+            width: calc(100% - 20px);
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Harmonic Pattern Checker</h1>
+        <input type="number" step="0.001" id="ratioAB" placeholder="Ratio AB">
+        <input type="number" step="0.001" id="ratioBC" placeholder="Ratio BC">
+        <input type="number" step="0.001" id="ratioCD" placeholder="Ratio CD">
+        <button onclick="checkPattern()">Check Pattern</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function checkPattern() {
+            const ab = parseFloat(document.getElementById('ratioAB').value);
+            const bc = parseFloat(document.getElementById('ratioBC').value);
+            const cd = parseFloat(document.getElementById('ratioCD').value);
+
+            const patterns = {
+                'Gartley': { ab: 0.618, bc: 0.618, cd: 1.272 },
+                'Butterfly': { ab: 0.786, bc: 0.786, cd: 1.618 },
+                'Bat': { ab: 0.382, bc: 0.382, cd: 2.618 },
+                'Crab': { ab: 0.382, bc: 0.382, cd: 3.618 }
+            };
+
+            let result = '';
+            for (const pattern in patterns) {
+                const abDiff = 1 - Math.abs(ab - patterns[pattern].ab) / patterns[pattern].ab;
+                const bcDiff = 1 - Math.abs(bc - patterns[pattern].bc) / patterns[pattern].bc;
+                const cdDiff = 1 - Math.abs(cd - patterns[pattern].cd) / patterns[pattern].cd;
+
+                const matchPercentage = ((abDiff + bcDiff + cdDiff) / 3) * 100;
+
+                result += `${pattern} Pattern: ${matchPercentage.toFixed(2)}% match\n`;
+            }
+
+            document.getElementById('result').innerText = result;
+        }
+    </script>
+</body>
+
+</html>
